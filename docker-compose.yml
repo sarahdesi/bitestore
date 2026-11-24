@@ -1,0 +1,20 @@
+services:
+  mariadb:
+    image: mariadb:11.4
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?DB_ROOT_PASSWORD is not set}
+      MARIADB_DATABASE: ${DB_NAME:?DB_NAME is not set}
+      MARIADB_USER: ${DB_USER:?DB_USER is not set}
+      MARIADB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is not set}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  db_data:
